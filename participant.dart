@@ -26,6 +26,7 @@ class Participant {
   }
 
   void answerMultiple(Quiz q, int questionNumber, List<int> answerChoices) {
+    int count = 0;
     if (q.questionlist[questionNumber].correctAnswers.length != answerChoices.length) {
       print("The number of answers is incorrect.");
       print("The right answer is \"${q.questionlist[questionNumber].correctAnswers}\"");
@@ -37,9 +38,12 @@ class Participant {
           isCorrect = false;
           break;
         }
+        else {
+          count++;
+        }
       }
       if (isCorrect) {
-        this._score++;
+        this._score += count;
         print("\"$answerChoices\" is the correct answer.");
       }
       else {

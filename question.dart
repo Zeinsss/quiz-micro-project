@@ -33,8 +33,8 @@ class Question {
   }
 
   void addCorrectAnswer(List<int> answerChoice) {
-    // Guaranteed that answer must be 4 before continuing
-    if (_answers.length < 4) {
+    // Guaranteed that answer must be 5 before continuing
+    if (_answers.length < 5) {
       throw new ArgumentError("Answer must have 4 choices!");
     } else {
       switch (this._type) {
