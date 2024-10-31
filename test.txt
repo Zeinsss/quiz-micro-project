@@ -1,1 +1,0 @@
-"Which of the following are gases found in the Earth's atmosphere?" ["Nitrogen", "Oxygen", "Helium", "Carbon" Dioxide, "Mercury"]

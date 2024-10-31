@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'quiz.dart';
 
 class Participant {
@@ -45,6 +48,52 @@ class Participant {
       }
     }
   }
+
+  void storeData(int num) async {
+    final participantData = {
+      'name': _name,
+      'completedQuiz': _completedQuiz,
+      'score': _score,
+    };
+
+    final jsonString = jsonEncode(participantData);
+    final file = File('participant_data-$num.json');
+    await file.writeAsString(jsonString);
+    print("Data saved to participant_data-$num.json");
+  }
+
+  static Future<List<Participant>> loadAllData() async {
+    int count = 1;
+    List<Participant> participants = [];
+
+    while (true) {
+      final file = File('participant_data-$count.json');
+      if (await file.exists()) {
+        final jsonString = await file.readAsString();
+        final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+
+        participants.add(
+          Participant(
+            name: jsonData['name'],
+            completedQuiz: List<int>.from(jsonData['completedQuiz']),
+            score: jsonData['score'],
+          ),
+        );
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    if (participants.isEmpty) {
+      print("No saved data found.");
+    } else {
+      print("${participants.length} participants loaded.\n");
+    }
+
+    return participants;
+  }
+
 
   void addCompletedQuiz(int id) {
     this._completedQuiz.add(id);

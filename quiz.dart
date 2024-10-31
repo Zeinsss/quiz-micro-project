@@ -12,13 +12,6 @@ class Quiz {
   
   Quiz({required int id, required String name}): this._name = name, this._id = id;
 
-  factory Quiz.fromJson(Map<String, dynamic> json) {
-      return Quiz(
-        id : json['id'],
-        name: json['name'],
-      );
-    }
-
   void addQuestion(List<Question> newQuestionList) {
     for (var i = 0; i < newQuestionList.length; i++) {
       this._questionlist.add(newQuestionList[i]);

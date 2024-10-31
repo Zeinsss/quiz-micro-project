@@ -5,22 +5,20 @@ import 'question.dart';
 import 'quiz.dart';
 import 'dart:io';
 
-main() {
+main() async{
   List<Quiz> quizList = [];
-  List<Participant> participantList = [];
+  List<Participant> participantList = await Participant.loadAllData();
 
-  // Create a quiz
   Quiz quiz1 = Quiz(id: 1, name: "Capital City Quiz");
   Quiz quiz2 = Quiz(id: 2, name: "Math Quiz");
 
-  // Create a question
   // Quiz 1
   Question question1 = Question(1, "What is the capital of Indonesia?",
-      ["Jakarta", "Bandung", "Bali", "Surabaya"], [1]);
+      ["Bandung", "Bali", "Jakarta", "Surabaya"], [3]);
   Question question2 = Question(2, "What is the capital of Japan?",
       ["Tokyo", "Kyoto", "Osaka", "Hokkaido"], [1]);
   Question question3 = Question(3, "What is the capital of South Korea?",
-      ["Seoul", "Busan", "Incheon", "Jeju"], [1]);
+      ["Busan", "Seoul", "Incheon", "Jeju"], [2]);
 
   // Quiz 2
 
@@ -39,7 +37,7 @@ main() {
       "Which of the following are even numbers?",
       ["1", "2", "3", "4", "5"],
       [2, 4]);
-  // Add question to the quiz
+
   quiz1.addQuestion([question1]);
   quiz1.addQuestion([question2]);
   quiz1.addQuestion([question3]);
@@ -47,17 +45,9 @@ main() {
   quiz2.addQuestion([multipleQuestion1]);
   quiz2.addQuestion([multipleQuestion2]);
   quiz2.addQuestion([multipleQuestion3]);
-  // Add quiz to the quiz list
+
   quizList.add(quiz1);
   quizList.add(quiz2);
-  // Create a participant
-  Participant participant =
-      Participant(name: "Tithya", completedQuiz: [], score: 0);
-  Participant participant2 =
-      Participant(name: "John", completedQuiz: [], score: 0);
-  // Add participant to the participant list
-  participantList.add(participant);
-  participantList.add(participant2);
 
   print("Welcome to the quiz app!");
   String input = "";
@@ -76,8 +66,7 @@ main() {
               print("\nWelcome back, $name!");
               break;
             } else {
-              Participant newParticipant =
-                  Participant(name: name, completedQuiz: [], score: 0);
+              Participant newParticipant = Participant(name: name, completedQuiz: [], score: 0);
               participantList.add(newParticipant);
               print("\nWelcome, $name!");
               break;
@@ -91,34 +80,36 @@ main() {
             input = stdin.readLineSync()!;
             switch (input) {
               case "S":
-                print("Choose a quiz: ");
+                print("\nChoose a quiz: \n");
                 for (var i = 0; i < quizList.length; i++) {
                   print("${i + 1}. ${quizList[i].name}");
                 }
+                print("Enter your choice: ");
                 int quizChoice = int.parse(stdin.readLineSync()!);
-                
+
                 print(quizList[quizChoice - 1]);
                 for (var i = 0; i < quizList[quizChoice - 1].questionlist.length; i++) {
 
                   print("Question ${i + 1}:");
                   print(quizList[quizChoice - 1].questionlist[i].title + "\n");
+
                   for (var j = 0; j < quizList[quizChoice - 1].questionlist[i].answer.length; j++) {
                     print("${j + 1}. ${quizList[quizChoice - 1].questionlist[i].answer[j]}");
                   }
+
                   print("Enter your answer: ");
-                  
                   List<int> choiceInputs = stdin.readLineSync()!.split(",").map((e) => int.parse(e)).toList();
 
                   if (quizList[quizChoice - 1].questionlist[i].type == QuestionType.SingleChoice) {
-                    for (var i = 0; i < participantList.length; i++) {
-                      if (participantList[i].name == name) {
-                        participantList[i].answerSingle(quizList[quizChoice - 1], i, choiceInputs);
+                    for (var participant in participantList) {
+                      if (participant.name == name) {
+                        participant.answerSingle(quizList[quizChoice - 1], i, choiceInputs);
                       }
                     }
                   } else {
-                    for (var i = 0; i < participantList.length; i++) {
-                      if (participantList[i].name == name) {
-                        participantList[i].answerMultiple(quizList[quizChoice - 1], i, choiceInputs);
+                    for (var participant in participantList) {
+                      if (participant.name == name) {
+                        participant.answerMultiple(quizList[quizChoice - 1], i, choiceInputs);
                       }
                     }
                   }
@@ -145,11 +136,16 @@ main() {
             }
           }
           break;
+        case "Q":
+          break;
         default:
           throw new ArgumentError("Invalid input!");
       }
     }
   } catch (e) {
     print(e);
+  }
+  for (var i = 0; i < participantList.length; i++) {
+    participantList[i].storeData(i + 1);
   }
 }
