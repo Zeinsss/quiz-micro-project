@@ -27,6 +27,8 @@ class Participant {
 
   void answerMultiple(Quiz q, int questionNumber, List<int> answerChoices) {
     int count = 0;
+    final List<int> correctAnswers = [];
+    final List<int> wrongAnswers = [];
     if (q.questionlist[questionNumber].correctAnswers.length != answerChoices.length) {
       print("The number of answers is incorrect.");
       print("The right answer is \"${q.questionlist[questionNumber].correctAnswers}\"");
@@ -36,10 +38,18 @@ class Participant {
       for (var i = 0; i < answerChoices.length; i++) {
         if (!q.questionlist[questionNumber].correctAnswers.contains(answerChoices[i])) {
           isCorrect = false;
+          wrongAnswers.add(answerChoices[i]);
           break;
         }
         else {
           count++;
+          correctAnswers.add(answerChoices[i]);
+        }
+      }
+      final List<int> forgetAnswers = [];
+      for (var i = 0; i < q.questionlist[questionNumber].correctAnswers.length; i++) {
+        if (!answerChoices.contains(q.questionlist[questionNumber].correctAnswers[i])) {
+          forgetAnswers.add(q.questionlist[questionNumber].correctAnswers[i]);
         }
       }
       if (isCorrect) {
@@ -47,8 +57,12 @@ class Participant {
         print("\"$answerChoices\" is the correct answer.");
       }
       else {
-        print("\"$answerChoices\" is not the correct answer.");
-        print("The right answer is \"${q.questionlist[questionNumber].correctAnswers}\"");
+        print("Your answer: $answerChoices");
+        print("Corrected: $correctAnswers");
+        print("Wrong: $wrongAnswers");
+        print("Forget: $forgetAnswers");
+        print("The total right answer is \"${q.questionlist[questionNumber].correctAnswers}\"");
+
       }
     }
   }
@@ -100,7 +114,9 @@ class Participant {
 
 
   void addCompletedQuiz(int id) {
-    this._completedQuiz.add(id);
+    if (!_completedQuiz.contains(id)) {
+      this._completedQuiz.add(id);
+    }
   }
 
   @override
