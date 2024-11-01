@@ -126,7 +126,7 @@ void startQuiz(Participant participant, List<Quiz> quizList) {
   }
 
   for (var question in chosenQuiz.questionlist) {
-    print("Question: ${question.title}");
+    print("Question: ${question.title} (${question.type})");
     for (int j = 0; j < question.answer.length; j++) {
       print("${j + 1}. ${question.answer[j]}");
     }
