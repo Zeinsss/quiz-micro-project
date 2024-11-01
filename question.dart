@@ -61,7 +61,6 @@ class Question {
 
   @override
   String toString() {
-    // TODO: implement toString
     return "Question: $_title\nAnswers: $_answers\nCorrect Answer: $_correctAnswers\nType: $_type";
   }
 }

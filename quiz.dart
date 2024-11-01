@@ -20,7 +20,6 @@ class Quiz {
 
   @override
   String toString() {
-    // TODO: implement toString
     String result = "Quiz: $_name\n\n";
     for (var i = 0; i < _questionlist.length; i++) {
       result += "Question ${i+1}: ${_questionlist[i].title}\n";
